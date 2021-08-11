@@ -1,5 +1,11 @@
 ## Smartfit
 
+Para instalar as deendências da aplicação
+
+```bash
+yarn dev
+```
+
 Para rodar a aplicação
 
 ```bash
