@@ -16,11 +16,23 @@ export const Content = styled.div`
     width: 100%;
     padding:88px 228px 100px;
 
-    h1{
+    > h1{
         font-size: 45px;
         width: 300px;
         font-weight: 700;
     }
+
+    @media (max-width: 900px) {
+        padding: 32px 42px;
+
+        
+        > h1{
+            width: fit-content;
+            word-break: break-all;
+        }
+    }
+
+    
 `
 
 export const Line = styled.hr`
@@ -34,9 +46,7 @@ export const InfoText = styled.p`
     font-weight: 500;
 `
 
-export const SeparatorLine = styled(Separator)`
-
-`
+export const SeparatorLine = styled(Separator)``
 
 export const ConfigurationCard = styled.section`
     margin-top: 50px;
@@ -101,6 +111,13 @@ export const CheckArea = styled.div`
         color: #363636;
         font-weight: 500;
     }
+
+    @media (max-width: 620px) {
+        p{
+            font-size: 1rem;
+        }
+    }
+
 `
 
 export const Footer = styled.footer`
@@ -130,11 +147,17 @@ export const ResultsFound = styled.div`
         font-weight: 500;
     }
 
-    p em{
+    @media (max-width: 620px) {
+        p{
+            font-size: 1rem;
+        }
+    }
+
+    > p em{
         font-size: 24px;
         font-style: normal;
         font-weight: 600;
-        line-height: 0;
+        margin-top: 16px;
     }
 `
 
@@ -146,6 +169,14 @@ export const CheckAndResultContainer = styled.div`
 
     justify-content: space-between;
 
+    @media (max-width: 900px) {
+        flex-direction: column;
+        align-items: center;
+
+        > div + div {
+            margin-top: 40px;
+        }
+    }
 `
 
 interface ButtonProps {
@@ -154,7 +185,6 @@ interface ButtonProps {
 
 export const Button = styled.button<ButtonProps>`
     width: 330px;
-    height: 52px;
 
     background: var(--yellow);
     border: none;
@@ -176,15 +206,40 @@ export const ActionArea = styled.div`
     display: flex;
     margin-top: 40px;
 
+    > button {
+        padding: 24px 0;
+        align-items: center;
+        justify-content: center;
+        display: flex;
+    } 
 
-    button + button {
+    > button + button {
         margin-left: 1rem;
     }
+
+    @media (max-width: 620px) {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        > button + button {
+            margin-left: 0;
+            margin-top: 30px;
+        }
+
+        > button {
+            width: 100%;
+        }
+    }
+
+
+    
 `
 
 export const GridLayout = styled.div`
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(19.25rem, auto));
-    gap: 0.5rem;
+    grid-auto-rows: minmax(150px, auto);
+    gap: 18px;
 `
 

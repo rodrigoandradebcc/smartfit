@@ -1,3 +1,4 @@
+import parse from 'html-react-parser';
 import Image from 'next/image';
 import React from 'react';
 import forbiddenFountain from '../../../public/images/forbidden-fountain.png';
@@ -8,9 +9,7 @@ import requiredLockerroom from '../../../public/images/required-lockerroom.png';
 import requiredMask from '../../../public/images/required-mask.png';
 import requiredTowel from '../../../public/images/required-towel.png';
 import { Gym } from '../../pages';
-import Separator from '../Separator';
 import * as S from './styles';
-import parse from 'html-react-parser';
 
 interface CardProps {
   gym: Gym;
@@ -22,9 +21,7 @@ interface Schedule {
 }
 
 function Card({ gym }: CardProps) {
-  const { opened, title, content, mask, towel, fountain, locker_room, schedules } = gym;
-
-  
+  const { opened, title, content, mask, towel, fountain, locker_room, schedules, street, region, city_name, state_name, uf } = gym;
 
   return (
     <S.Container opened={opened}>
@@ -34,13 +31,27 @@ function Card({ gym }: CardProps) {
       {opened && (
           <>
             <S.Content>
-          {parse(`${content}`)}
-          </S.Content>
+              {content && parse(`${content}`)}
+            </S.Content>
            <S.SeparatorCard />
           </>
       )}
 
-     
+      
+        <S.Content>
+          <p>
+            {street && region && `${street} - ${region}`}
+          </p>
+          <p>
+            {city_name && `${city_name}`}
+          </p>
+          <p>
+            {state_name && uf && `${state_name}, ${uf}`}
+          </p>
+        </S.Content>
+      
+
+      
 
       <S.ImageContainer>
         {mask === 'required' && (
@@ -76,8 +87,7 @@ function Card({ gym }: CardProps) {
         }
       </S.ImageContainer>
       
-      
-        
+ 
       <S.SchedulesText>
         {schedules?.map((schedule, index) => (
           <div key={index}>

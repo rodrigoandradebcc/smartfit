@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import hourIcon from '../../public/images/icon-hour.png'
 import logoImg from '../../public/images/logo.svg'
 import Card from '../components/Card'
@@ -24,11 +24,68 @@ export interface Gym {
     schedules: Schedules[];
     title: string;
     towel: string;
+    street?: string;
+    region?: string;
+    city_name?: string;
+    state_name?: string;
+    uf?: string;
 }
 
 export default function Home() {
   const [gyms, setGyms] = useState<Gym[]>([]);
+  const [filteredGyms, setFilteredGyms] = useState<Gym[]>([]);
+  const [closedUnits, setClosedUnits] = useState(false);
+  const [period, setPeriod] = useState('');
+  const [clear, setClear] = useState(false);
 
+  function clearGyms(){
+    setClear(true);
+    setFilteredGyms([])
+    setPeriod('')
+  }
+
+  function validateLimitHour(hour: string, open: number, close: number) {
+    const hours = hour.match(/\d/g);
+    if(hours?.length === 4) {
+         return Number(`${hours[0]}${hours[1]}`) >= open || Number(`${hours[2]}${hours[3]}`) < close;
+    }
+
+    if(hours?.length === 8) {
+        return Number(`${hours[0]}${hours[1]}`) >= open && Number(`${hours[2]}${hours[3]}`) <= 30 || Number(`${hours[4]}${hours[5]}`) <= close && Number(`${hours[6]}${hours[7]}`) <= 30;
+    }
+}
+     
+
+  function filterGyms(close: boolean, period: string) {
+    if(closedUnits === false){
+      
+      const filtered = gyms.filter((gym: Gym) => {
+        if(!gym.schedules){
+          return
+        }
+
+        const validation = gym.schedules && gym.opened === close
+
+        if(period === 'Manhã 06:00 às 12:00' && validation){       
+          return validateLimitHour(gym.schedules[0].hour, 6, 12) || validateLimitHour(gym.schedules[1].hour, 6, 12) || validateLimitHour(gym.schedules[2].hour, 6, 12) 
+        }
+        
+        if(period === 'Tarde 12:01 às 18:00' && validation) {   
+          return validateLimitHour(gym.schedules[0].hour, 12, 18) || validateLimitHour(gym.schedules[1].hour, 12, 18) || validateLimitHour(gym.schedules[2].hour, 12, 18)
+        }
+
+        if(period === 'Noite 18:01 às 23:00' && validation  ) {
+          return validateLimitHour(gym.schedules[0].hour, 18, 23) || validateLimitHour(gym.schedules[1].hour, 18, 23) || validateLimitHour(gym.schedules[2].hour, 18, 23)
+        }
+      })
+
+      setFilteredGyms(filtered) 
+    } else {
+
+      const filtered = gyms.filter(gym => gym.opened === false || gym.opened === undefined)
+      setFilteredGyms(filtered)
+    }    
+  }
 
   useEffect(() => {
       try {
@@ -42,9 +99,6 @@ export default function Home() {
     },
     [],
   )
-
-  console.log('gyms',gyms);
-
 
   return (
     <div>
@@ -78,25 +132,25 @@ export default function Home() {
 
             <S.SeparatorLine />
 
-            <RadioBox />
+            <RadioBox setPeriod={setPeriod} period={period}/>
             
             <S.CheckAndResultContainer>
               <S.CheckArea>
-                <input type="checkbox" id="closed" name="closed"/>
+                <input type="checkbox" id="closed" name="closed" checked={closedUnits} onChange={(event) => {setClosedUnits(event.target.checked)}}/>
                 <p>Exibir unidades fechadas</p>
               </S.CheckArea>
 
               <S.ResultsFound>
-                <p>Resultados encontrados: <em>0</em></p>
+                <p>Resultados encontrados: <em>{filteredGyms.length > 0 ? filteredGyms.length : 0}</em></p>
               </S.ResultsFound>
             </S.CheckAndResultContainer>
 
             <S.ActionArea>
-              <S.Button>
+              <S.Button onClick={() => {filterGyms(closedUnits,period);setClear(false);}}>
                 Encontrar unidade
               </S.Button>
 
-              <S.Button outlined>
+              <S.Button outlined onClick={() => {clearGyms()}}>
                 Limpar
               </S.Button>
             </S.ActionArea>
@@ -106,19 +160,24 @@ export default function Home() {
           <InfoCard/>
 
           <S.GridLayout>
-              {
-                gyms.map((gym, index) => {
+              
+                {gyms && clear && gyms.map((gym, index) => {
                   return (
                     <div key={index}>
                       <Card key={index} gym={gym} />
                     </div>
                   )
-                })
-              }
+                })}
 
+                {filteredGyms && filteredGyms.map((gym, index) => {
+                  return (
+                    <div key={index}>
+                      <Card key={index} gym={gym} />
+                    </div>
+                  )
+                })}              
+              
           </S.GridLayout>
-          
-
         </S.Content>
       </main>
 

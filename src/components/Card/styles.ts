@@ -7,10 +7,8 @@ interface ContainerProps {
 
 export const Container = styled.div<ContainerProps>`
     background: #f5f5f5;
-    margin-top: 40px;
-    width: 19.25rem;
+    height: 100%;
     min-height: 452px;
-    height: fit-content;
 
     padding: 16px 16px 42px 16px;
 
@@ -24,6 +22,8 @@ export const Container = styled.div<ContainerProps>`
         font-weight: 600;
         font-size: 24px;
     }
+
+    box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
 
 `;
 

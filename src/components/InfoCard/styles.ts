@@ -8,6 +8,17 @@ export const CardContainer = styled.section`
     padding: 30px 14px;
     display: flex;
     justify-content: space-between;
+    margin-bottom: 40px;
+
+    @media (max-width: 1278px) {
+        flex-direction: column;
+        align-items: center;
+
+        > div + div {
+            margin-top: 100px;
+        }
+    }
+
 `
 
 export const InfoLabel = styled.p`

@@ -25,5 +25,9 @@ export const Text = styled.div`
     margin-left: 8px;
 
     justify-content: space-between;
-    color: #969696;
+    color: #808080;
+
+    p{
+        font-size: 1rem;
+    }
 `
