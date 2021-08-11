@@ -62,50 +62,43 @@ export default function Home() {
   function filterGyms(close: boolean, period: string) {
     
       const filtered = gyms.filter((gym: Gym) => {
-        // if(!gym.schedules){ 
-        //   return gym.opened === false || gym.opened === undefined
-        // }
-
-        if(closedUnits === false && gym.opened){
-          if(period === 'Manhã 06:00 às 12:00'){
-            console.log(validateLimitHour(gym.schedules[0].hour, 6, 12) || validateLimitHour(gym.schedules[1].hour, 6, 12) || validateLimitHour(gym.schedules[2].hour, 6, 12))       
-            return validateLimitHour(gym.schedules[0].hour, 6, 12) || validateLimitHour(gym.schedules[1].hour, 6, 12) || validateLimitHour(gym.schedules[2].hour, 6, 12) 
-          }
-          
-          if(period === 'Tarde 12:01 às 18:00' && gym.opened) {   
-            return validateLimitHour(gym.schedules[0].hour, 12, 18) || validateLimitHour(gym.schedules[1].hour, 12, 18) || validateLimitHour(gym.schedules[2].hour, 12, 18)
-          }
-
-          if(period === 'Noite 18:01 às 23:00' && gym.opened) {
-            return validateLimitHour(gym.schedules[0].hour, 18, 23) || validateLimitHour(gym.schedules[1].hour, 18, 23) || validateLimitHour(gym.schedules[2].hour, 18, 23)
-          }
+        if(gym.opened){
+            if(!gym.opened || gym.opened === undefined){
+              return 
+            } else {
+              if(period === 'Manhã 06:00 às 12:00' && gym.opened === true){    
+                return validateLimitHour(gym.schedules[0].hour, 6, 12) || validateLimitHour(gym.schedules[1].hour, 6, 12) || validateLimitHour(gym.schedules[2].hour, 6, 12) && (gym.opened)
+              }
+              
+              if(period === 'Tarde 12:01 às 18:00' && gym.opened) {    
+                return validateLimitHour(gym.schedules[0].hour, 12, 18) || validateLimitHour(gym.schedules[1].hour, 12, 18) || validateLimitHour(gym.schedules[2].hour, 12, 18) && (gym.opened)
+              }
+    
+              if(period === 'Noite 18:01 às 23:00' && gym.opened) {    
+                return validateLimitHour(gym.schedules[0].hour, 18, 23) || validateLimitHour(gym.schedules[1].hour, 18, 23) || validateLimitHour(gym.schedules[2].hour, 18, 23) && (gym.opened)
+              }
+            }          
         }
 
-        if(closedUnits){
-          // return gym.opened === false || gym.opened === undefined
+        if(closedUnits && gym.schedules){
 
-          if(period === 'Manhã 06:00 às 12:00' || gym.opened){
-            console.log(validateLimitHour(gym.schedules[0].hour, 6, 12) || validateLimitHour(gym.schedules[1].hour, 6, 12) || validateLimitHour(gym.schedules[2].hour, 6, 12))       
-            return validateLimitHour(gym.schedules[0].hour, 6, 12) || validateLimitHour(gym.schedules[1].hour, 6, 12) || validateLimitHour(gym.schedules[2].hour, 6, 12) 
+          if((period === 'Manhã 06:00 às 12:00' || gym.opened) && gym.schedules){
+            return validateLimitHour(gym.schedules[0].hour, 6, 12) || validateLimitHour(gym.schedules[1].hour, 6, 12) || validateLimitHour(gym.schedules[2].hour, 6, 12) && (gym.opened === false)
           }
           
           if(period === 'Tarde 12:01 às 18:00') {   
-            return validateLimitHour(gym.schedules[0].hour, 12, 18) || validateLimitHour(gym.schedules[1].hour, 12, 18) || validateLimitHour(gym.schedules[2].hour, 12, 18)
+            return validateLimitHour(gym.schedules[0].hour, 12, 18) || validateLimitHour(gym.schedules[1].hour, 12, 18) || validateLimitHour(gym.schedules[2].hour, 12, 18) && (gym.opened === false)
           }
 
           if(period === 'Noite 18:01 às 23:00') {
-            return validateLimitHour(gym.schedules[0].hour, 18, 23) || validateLimitHour(gym.schedules[1].hour, 18, 23) || validateLimitHour(gym.schedules[2].hour, 18, 23)
+            return validateLimitHour(gym.schedules[0].hour, 18, 23) || validateLimitHour(gym.schedules[1].hour, 18, 23) || validateLimitHour(gym.schedules[2].hour, 18, 23 ) && (gym.opened === false)
           }
+        }else{
+          return
         }
-                
       })
 
-      setFilteredGyms(filtered) 
-     
-    // else {
-    //   const filtered = gyms.filter(gym => gym.opened === false || gym.opened === undefined)
-    //   setFilteredGyms(filtered)
-    // }    
+      setFilteredGyms(filtered)   
   }
 
   useEffect(() => {
@@ -120,6 +113,7 @@ export default function Home() {
     },
     [],
   )
+
 
   return (
     <div>
@@ -195,7 +189,7 @@ export default function Home() {
 
           <S.GridLayout>
               
-                {gyms && error === false && gyms.map((gym, index) => {
+                {filteredGyms.length === 0 && error === false && gyms.map((gym, index) => {
                   return (
                     <div key={index}>
                       <Card key={index} gym={gym} />
