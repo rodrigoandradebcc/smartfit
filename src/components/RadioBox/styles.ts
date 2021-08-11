@@ -14,6 +14,11 @@ export const RadioContainer = styled.div`
             margin-top: 34px;
         }
 
+        input {
+            width:20px;
+            height:20px;
+        }
+
         display: flex;
     }
 `

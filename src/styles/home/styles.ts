@@ -106,6 +106,11 @@ export const CheckArea = styled.div`
     display: flex;
     align-items: center;
 
+    input {
+        width: 18px;
+        height: 18px;
+    }
+
     > p {
         margin-left: 0.5rem;
         color: #363636;

@@ -42,6 +42,7 @@ export default function Home() {
     setClear(true);
     setFilteredGyms([])
     setPeriod('')
+    setClosedUnits(false)
   }
 
   function validateLimitHour(hour: string, open: number, close: number) {
