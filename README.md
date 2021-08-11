@@ -3,7 +3,7 @@
 Para instalar as deendências da aplicação
 
 ```bash
-yarn dev
+yarn
 ```
 
 Para rodar a aplicação
