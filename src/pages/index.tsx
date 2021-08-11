@@ -1,10 +1,11 @@
 import Head from 'next/head'
 import Image from 'next/image'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import hourIcon from '../../public/images/icon-hour.png'
 import logoImg from '../../public/images/logo.svg'
 import Card from '../components/Card'
 import InfoCard from '../components/InfoCard'
+import Message from '../components/Message'
 import RadioBox from '../components/RadioBox'
 import api from '../services/api'
 import * as S from '../styles/home/styles'
@@ -37,6 +38,7 @@ export default function Home() {
   const [closedUnits, setClosedUnits] = useState(false);
   const [period, setPeriod] = useState('');
   const [clear, setClear] = useState(false);
+  const [error, setError] = useState(false);
 
   function clearGyms(){
     setClear(true);
@@ -58,34 +60,52 @@ export default function Home() {
      
 
   function filterGyms(close: boolean, period: string) {
-    if(closedUnits === false){
-      
+    
       const filtered = gyms.filter((gym: Gym) => {
-        if(!gym.schedules){
-          return
+        // if(!gym.schedules){ 
+        //   return gym.opened === false || gym.opened === undefined
+        // }
+
+        if(closedUnits === false && gym.opened){
+          if(period === 'Manhã 06:00 às 12:00'){
+            console.log(validateLimitHour(gym.schedules[0].hour, 6, 12) || validateLimitHour(gym.schedules[1].hour, 6, 12) || validateLimitHour(gym.schedules[2].hour, 6, 12))       
+            return validateLimitHour(gym.schedules[0].hour, 6, 12) || validateLimitHour(gym.schedules[1].hour, 6, 12) || validateLimitHour(gym.schedules[2].hour, 6, 12) 
+          }
+          
+          if(period === 'Tarde 12:01 às 18:00' && gym.opened) {   
+            return validateLimitHour(gym.schedules[0].hour, 12, 18) || validateLimitHour(gym.schedules[1].hour, 12, 18) || validateLimitHour(gym.schedules[2].hour, 12, 18)
+          }
+
+          if(period === 'Noite 18:01 às 23:00' && gym.opened) {
+            return validateLimitHour(gym.schedules[0].hour, 18, 23) || validateLimitHour(gym.schedules[1].hour, 18, 23) || validateLimitHour(gym.schedules[2].hour, 18, 23)
+          }
         }
 
-        const validation = gym.schedules && gym.opened === close
+        if(closedUnits){
+          // return gym.opened === false || gym.opened === undefined
 
-        if(period === 'Manhã 06:00 às 12:00' && validation){       
-          return validateLimitHour(gym.schedules[0].hour, 6, 12) || validateLimitHour(gym.schedules[1].hour, 6, 12) || validateLimitHour(gym.schedules[2].hour, 6, 12) 
-        }
-        
-        if(period === 'Tarde 12:01 às 18:00' && validation) {   
-          return validateLimitHour(gym.schedules[0].hour, 12, 18) || validateLimitHour(gym.schedules[1].hour, 12, 18) || validateLimitHour(gym.schedules[2].hour, 12, 18)
-        }
+          if(period === 'Manhã 06:00 às 12:00' || gym.opened){
+            console.log(validateLimitHour(gym.schedules[0].hour, 6, 12) || validateLimitHour(gym.schedules[1].hour, 6, 12) || validateLimitHour(gym.schedules[2].hour, 6, 12))       
+            return validateLimitHour(gym.schedules[0].hour, 6, 12) || validateLimitHour(gym.schedules[1].hour, 6, 12) || validateLimitHour(gym.schedules[2].hour, 6, 12) 
+          }
+          
+          if(period === 'Tarde 12:01 às 18:00') {   
+            return validateLimitHour(gym.schedules[0].hour, 12, 18) || validateLimitHour(gym.schedules[1].hour, 12, 18) || validateLimitHour(gym.schedules[2].hour, 12, 18)
+          }
 
-        if(period === 'Noite 18:01 às 23:00' && validation  ) {
-          return validateLimitHour(gym.schedules[0].hour, 18, 23) || validateLimitHour(gym.schedules[1].hour, 18, 23) || validateLimitHour(gym.schedules[2].hour, 18, 23)
+          if(period === 'Noite 18:01 às 23:00') {
+            return validateLimitHour(gym.schedules[0].hour, 18, 23) || validateLimitHour(gym.schedules[1].hour, 18, 23) || validateLimitHour(gym.schedules[2].hour, 18, 23)
+          }
         }
+                
       })
 
       setFilteredGyms(filtered) 
-    } else {
-
-      const filtered = gyms.filter(gym => gym.opened === false || gym.opened === undefined)
-      setFilteredGyms(filtered)
-    }    
+     
+    // else {
+    //   const filtered = gyms.filter(gym => gym.opened === false || gym.opened === undefined)
+    //   setFilteredGyms(filtered)
+    // }    
   }
 
   useEffect(() => {
@@ -112,7 +132,13 @@ export default function Home() {
           <Image src={logoImg} alt="Smart fit" width={188} height={70}/>
         </S.Navbar>
 
+        {error && (
+            <Message message='Nenhuma unidade encontrada' setError={setError}/>
+        )}
+
         <S.Content>
+          
+
           <h1>REABERTURA SMART FIT</h1>
 
           <S.Line/>
@@ -147,7 +173,14 @@ export default function Home() {
             </S.CheckAndResultContainer>
 
             <S.ActionArea>
-              <S.Button onClick={() => {filterGyms(closedUnits,period);setClear(false);}}>
+              <S.Button onClick={() => {
+                if(period !== ''){
+                  filterGyms(closedUnits,period);
+                  setClear(false);
+                }else{
+                  setError(true)
+                }
+              }}>
                 Encontrar unidade
               </S.Button>
 
