@@ -132,10 +132,6 @@ export default function Home() {
           <Image src={logoImg} alt="Smart fit" width={188} height={70}/>
         </S.Navbar>
 
-        {error && (
-            <Message message='Nenhuma unidade encontrada' setError={setError}/>
-        )}
-
         <S.Content>
           
 
@@ -193,9 +189,13 @@ export default function Home() {
           
           <InfoCard/>
 
+          {error && (
+            <Message message='Nenhuma unidade encontrada' setError={setError}/>
+          )}
+
           <S.GridLayout>
               
-                {gyms && clear && gyms.map((gym, index) => {
+                {gyms && clear && error === false && gyms.map((gym, index) => {
                   return (
                     <div key={index}>
                       <Card key={index} gym={gym} />
