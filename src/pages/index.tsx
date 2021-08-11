@@ -195,7 +195,7 @@ export default function Home() {
 
           <S.GridLayout>
               
-                {gyms && clear && error === false && gyms.map((gym, index) => {
+                {gyms && error === false && gyms.map((gym, index) => {
                   return (
                     <div key={index}>
                       <Card key={index} gym={gym} />
