@@ -26,4 +26,4 @@ Esse projeto utilizou as seguintes techs:
 
 ## 🧪 Deploy na Vercel
 
-Clique no [link](http://smartfit.vercel.app).
+Clique no [http://smartfit.vercel.app](http://smartfit.vercel.app).
