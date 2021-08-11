@@ -165,6 +165,8 @@ export default function Home() {
             <S.ActionArea>
               <S.Button onClick={() => {
                 if(period !== ''){
+                  setError(false)
+
                   filterGyms(closedUnits,period);
                   setClear(false);
                 }else{
