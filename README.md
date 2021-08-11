@@ -23,3 +23,7 @@ Esse projeto utilizou as seguintes techs:
 - [React](https://reactjs.org)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Styled Components](https://styled-components.com/)
+
+## 🧪 Deploy na Vercel
+
+Clique [http://localhost:3000](http://smartfit.vercel.app).
