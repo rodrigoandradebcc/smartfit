@@ -14,20 +14,24 @@ export const Content = styled.div`
     display: flex;
     flex-direction: column;
     width: 100%;
-    padding:88px 228px 100px;
+    padding: 88px 228px 100px;
 
     > h1{
-        font-size: 45px;
+        font-size: 2.75rem;
         width: 300px;
         font-weight: 700;
     }
 
     @media (max-width: 900px) {
         padding: 32px 42px;
-
         
         > h1{
             width: fit-content;
+        }
+    }
+
+    @media (max-width: 400px) {
+        > h1{
             word-break: break-all;
         }
     }
